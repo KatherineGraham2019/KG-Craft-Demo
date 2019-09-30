@@ -6,31 +6,13 @@ export default class PokemonProfile extends React.Component {
         super(props);
 
         this.state = {
-            linkLoad: 'https://pokeapi.co/api/v2/pokemon/?offset=0&limit=20',
-            pokemon: [],
+            searchParamenter: ""
         };
     }
-
-    /*componentDidMount() {
-        this.loadPokemon();
+    
+    handleChange(e) {
+        this.setState({searchParamenter: e.value});
     }
-
-
-    loadPokemon() {
-        const { linkLoad } = this.state;
-
-        fetch(linkLoad)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-
-                this.setState(prevState => ({
-                    linkLoad: data.next,
-                    pokemon: prevState.pokemon.concat(data.results)
-                }), () => { if(linkLoad) { this.loadPokemon(); } }
-                );
-            });
-    }*/
 
     render() {
         const { pokemon } = this.props;

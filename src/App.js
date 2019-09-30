@@ -5,18 +5,14 @@ import './App.css';
 function App() {
 
   const [pokemon, setPokemon] = useState([]);
-  const [linkLoad, setNextLink] = useState('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=20');
 
   useEffect(() => {
-    if(linkLoad){
-      fetch(linkLoad)
-        .then(response => response.json())
-        .then(data =>  {
-            setPokemon(pokemon.concat(data.results)); 
-            setNextLink(data.next);
-        }, () => { console.log(pokemon); });
-    }
-  });
+    fetch('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151')
+      .then(response => response.json())
+      .then(data =>  {
+        setPokemon(data.results); 
+      }, () => { console.log(pokemon); });
+  }, []);
 
   return (
     <div className="App">
