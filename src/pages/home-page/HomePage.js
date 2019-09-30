@@ -1,4 +1,5 @@
 import React from 'react';
+import './home-page.scss';
 
 export default class PokemonProfile extends React.Component {
 
@@ -11,19 +12,42 @@ export default class PokemonProfile extends React.Component {
     }
     
     handleChange(e) {
+        console.log(e.value);
         this.setState({searchParamenter: e.value});
     }
 
+    renderPokemonBox(pokemon) {
+        return(
+            <div className="display-pokemon">
+                <div className="image-container"><img src={pokemon.sprites.front_default} /></div>
+                {pokemon.name}
+            </div>
+        );
+    }
+
     render() {
+        const { searchParameter } = this.state;
         const { pokemon } = this.props;
 
         return (
-            <div>
-                {pokemon.map((mon, index) => {
-                    return (
-                        <div key={`pokemon-${mon.name}-${index}`}>{mon.name}</div>
-                    )
-                })}
+            <div className="home-page">
+                <button>All</button>
+                <button>Fav</button>
+                <input 
+                    placeholder={"Find A Pokemon"}
+                    type="text" 
+                    value={searchParameter} 
+                    onChange={event => this.handleChange(event)}
+                />
+                <div className="pokemon-item-display">
+                    {pokemon.map((mon, index) => {
+                        return (
+                            <div key={`pokemon-${index}`}>
+                                {this.renderPokemonBox(mon)}
+                            </div>
+                        )
+                    })}
+                </div>
             </div>
         );
     }

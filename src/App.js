@@ -5,14 +5,16 @@ import './App.css';
 function App() {
 
   const [pokemon, setPokemon] = useState([]);
+  const [id, setId] = useState(1);
 
   useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151')
+    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
       .then(response => response.json())
       .then(data =>  {
-        setPokemon(data.results); 
+        setPokemon(oldArray => [...oldArray, {...data}]); 
+        if(id !== 151){ setId(id + 1); }
       }, () => { console.log(pokemon); });
-  }, []);
+  }, [id]);
 
   return (
     <div className="App">
