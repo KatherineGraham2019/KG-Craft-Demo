@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import HomePage from './pages/home-page/HomePage.js';
-import './App.css';
+import PokemonProfile from './pages/pokemon-profile/PokemonProfile.js';
+import './app.scss';
 
 function App() {
 
@@ -13,16 +15,17 @@ function App() {
       .then(data =>  {
         setPokemon(oldArray => [...oldArray, {...data}]); 
         if(id !== 151){ setId(id + 1); }
-      }, () => { console.log(pokemon); });
+      });
   }, [id]);
 
   return (
     <div className="App">
-      <header className="App-header">
-      
-      </header>
-
-      <HomePage pokemon={pokemon}/>
+      <Router>
+        <Route exact path="/">
+          <HomePage pokemon={pokemon} />
+        </Route>
+        <Route exact path="/pokemon/:id" component={PokemonProfile} />
+      </Router>
 
     </div>
   );

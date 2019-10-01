@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import './home-page.scss';
 
 export default class PokemonProfile extends React.Component {
@@ -20,7 +21,7 @@ export default class PokemonProfile extends React.Component {
         return(
             <div className="display-pokemon">
                 <div className="image-container"><img src={pokemon.sprites.front_default} /></div>
-                {pokemon.name}
+                <Link to={`/pokemon/${pokemon.id}`}><div className="name-text">{pokemon.name}</div></Link>
             </div>
         );
     }
