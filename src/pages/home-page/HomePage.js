@@ -14,18 +14,17 @@ export default class PokemonProfile extends React.Component {
     }
     
     handleChange(e) {
-        console.log(e.target.value);
         this.setState({searchParamenter: e.target.value});
     }
 
     renderPokemonBox(pokemon) {
         return(
-            <Link to={`/pokemon/${pokemon.id}`}>
-                <div className="display-pokemon">
-                    <div className="image-container"><img src={pokemon.sprites.front_default} /></div>
-                    <div className="name-text">{pokemon.name}</div>
-                </div>
-            </Link>
+                <Link to={`/pokemon/${pokemon.id}`}>
+                    <div className="display-pokemon">
+                        <div className="image-container"><img src={pokemon.sprites.front_default} /></div>
+                        <div className="name-text">{pokemon.name}</div>
+                    </div>
+                </Link>
         );
     }
 
@@ -93,6 +92,7 @@ export default class PokemonProfile extends React.Component {
                 </div>
                 <div className="text-input">
                     <input 
+                        id="searchInput"
                         className="search-input"
                         placeholder={"Find A Pokemon"}
                         type="text" 
