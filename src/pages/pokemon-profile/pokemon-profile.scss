@@ -1,5 +1,26 @@
 @import '../../theme.scss';
 
+
+.contain-back-button {
+    display: flex;
+    justify-content: center;
+
+    .return {
+        width: 200px;
+        height: 50px;
+        font-size: 18px;
+        font-weight: bold;
+        color: $pokemon-blue;
+        text-transform: uppercase;
+        border-radius: 10px;
+        box-shadow: 1px 1px 5px $white;
+
+        &:hover {
+            background-color: $pokemon-yellow-lightest;
+        }
+    }
+}
+
 .pokemon-profile {
     display: flex;
     justify-content: center;
@@ -28,6 +49,18 @@
             text-align: center;
         }
 
+        .checkbox-container {
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+
+            .checkbox-label {
+                font-weight: 500;
+                color: $pokemon-strong-yellow;
+                text-transform: uppercase;
+            }
+        }
+
     }
 
     .our-map {
@@ -36,5 +69,22 @@
         margin-left: 20px;
         border-radius: 10px;
         margin-top: 30px;
+    }
+}
+
+.marker {
+    position: absolute;
+    z-index: 100;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    background-color: #000;
+    border: 2px solid #fff;
+    border-radius: 100%;
+    user-select: none;
+    transform: translate(-50%, -50%);
+    &:hover {
+      z-index: 1;
     }
 }

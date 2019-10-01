@@ -93,14 +93,21 @@
         }
     }
 
-    .isLoading {
-        display: visible;
-        text-align: center;
-        margin-left: auto;
-        margin-right: auto;
-    }
+    .loading-container{
+        display: flex;
+        justify-content: center;
+        padding: 30px;
 
-    .hide {
-        display: none;
+        .isLoading {
+            
+            display: visible;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    
+        .hide {
+            display: none;
+        }
     }
 }

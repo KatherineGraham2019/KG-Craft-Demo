@@ -1,30 +1,18 @@
 import React from 'react';
-import { GoogleMap, withScriptjs, withGoogleMap, Marker } from 'react-google-maps';
+import GoogleMapReact from 'google-map-react';
 import './pokemon-profile.scss';
 
-const MyMapComponent = withScriptjs(withGoogleMap((props) =>
-  <GoogleMap
-    defaultZoom={10}
-    defaultCenter={{ lat: props.lat, lng: props.lng }}
-  >
-    {props.coordinates.length && props.coordinates.map((coords, index) => {
-        const coordinateSplit = coords.split(',');
+const Marker = (props) => {
+    const { name } = props;
+    return (
+      <div className="marker"
+        style={{ backgroundColor: '#CC0000', cursor: 'pointer'}}
+        title={name}
+      />
+    );
+};
 
-        console.log(coords);
-
-        return(
-            <Marker
-                key={`marker-${index}`}
-                position={{ 
-                    lat: parseFloat(coordinateSplit[0]), 
-                    lng: parseFloat(coordinateSplit[1])
-                }} 
-            />
-        )
-    })}
-</GoogleMap>
-));
-
+/** API Keys -> Should move to .env file */
 const MAP_API_KEY = "AIzaSyBXPgZ5poyvrTBPk7TJCkXSpCVMxi2Tc34";
 const HEADER_API_KEY = "HHko9Fuxf293b3w56zAJ89s3IcO9D5enaEPIg86l";
 
@@ -37,8 +25,10 @@ export default class PokemonProfile extends React.Component {
             id: props.match.params.id,
             pokemon: {},
             coordinates: [],
-            lat: 32.715760,
-            lng: -117.163820,
+            center: {
+                lat: 33.041359,
+                lng: -116.879257,
+            },
             name: "",
             checked: false,
         }
@@ -51,6 +41,10 @@ export default class PokemonProfile extends React.Component {
         this.getPokemonLocation(id);
     }
 
+    /**
+     * Calls the API to get the id of the pokemon
+     * @param {*} id 
+     */
     getPokemon(id) {
         fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
             .then(response => response.json())
@@ -63,6 +57,10 @@ export default class PokemonProfile extends React.Component {
             });
     }
 
+    /** 
+     * Calls the API to get the locations of where a pokemon may be
+     * @param {*} id 
+     */
     getPokemonLocation(id) {
         fetch(`https://api.craft-demo.net/pokemon/${id}`, {
             headers: {
@@ -70,7 +68,7 @@ export default class PokemonProfile extends React.Component {
             }
         }).then(response => response.json())
             .then(data =>  {
-                this.setState({ coordinates: data })
+                this.setState({ coordinates: data.locations })
             });
     }
 
@@ -96,7 +94,6 @@ export default class PokemonProfile extends React.Component {
      */
     isSavedToBag(name) {
         for (let key in localStorage){
-            console.log(key);
             if(key === name){
                 console.log(key);
                 return true;
@@ -117,7 +114,7 @@ export default class PokemonProfile extends React.Component {
 
         return(
             <div className="pokemon-profile-details">
-                <img src={pokemon['sprites'] && pokemon['sprites'].front_shiny} />
+                <img className="pokemon" src={pokemon['sprites'] && pokemon['sprites'].front_shiny} />
                 <h1>{name}</h1>
                 <p>Height: {height}</p>
                 <p>Weight: {weight}</p>
@@ -129,33 +126,55 @@ export default class PokemonProfile extends React.Component {
                         return (<li key={`${name}-${ability}-${index}`}>{ability.ability.name}</li>);
                     })}
                 </ul>
-                <input 
-                    checked={checked} 
-                    type="checkbox" 
-                    onChange={(event) => this.handleCheckboxChange(event)} 
-                />
+                <div className="checkbox-container">
+                    <label className="checkbox-label" htmlFor="addToBag">Add Pokemon to Bag:</label>
+                    <input 
+                        id="addToBag"
+                        checked={checked} 
+                        type="checkbox" 
+                        onChange={(event) => this.handleCheckboxChange(event)} 
+                    />
+                </div>
             </div>
         )
     }
 
     render() {
-        const { pokemon, coordinates, lat, lng } = this.state;
+        const { pokemon, coordinates, center } = this.state;
 
         return (
-            <div className="pokemon-profile">
-                {pokemon !== {} ? this.renderPokemonProfile(pokemon) : <div></div>}
+            <div>
+                <div className="contain-back-button">
+                    <button 
+                        className="return"
+                        onClick={() => this.props.history.goBack()}
+                    >
+                        Return To Home
+                    </button>
+                </div>
+                
+                <div className="pokemon-profile">
+                    {pokemon !== {} ? this.renderPokemonProfile(pokemon) : <div></div>}
 
-                <div className="our-map" >
-                    <MyMapComponent
-                        lat={lat}
-                        lng={lng}
-                        coordinates={coordinates}
-                        googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.
-                            exp&libraries=geometry,drawing,places&key=${MAP_API_KEY}`}
-                        loadingElement={<div style={{ height: `100%` }} />}
-                        containerElement={<div style={{ height: `500px` }} />}
-                        mapElement={<div style={{ height: `100%` }} />}
-                    />
+                    <div className="our-map" >  
+                        <GoogleMapReact
+                            bootstrapURLKeys={{ key: MAP_API_KEY }}
+                            defaultCenter={center}
+                            defaultZoom={9}
+                        >
+                            {coordinates.length && coordinates.map((coords, index) => {
+                                const coordinateSplit = coords.split(',');
+                                return(
+                                    <Marker
+                                        lat={parseFloat(coordinateSplit[0])}
+                                        lng={parseFloat(coordinateSplit[1])}
+                                        name={pokemon.name}
+                                    />
+                                )
+                            })}
+                            
+                        </GoogleMapReact>
+                    </div>
                 </div>
             </div>
         );

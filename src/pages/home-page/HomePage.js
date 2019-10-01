@@ -14,23 +14,29 @@ export default class PokemonProfile extends React.Component {
     }
     
     handleChange(e) {
-        console.log(e.value);
-        this.setState({searchParamenter: e.value});
+        console.log(e.target.value);
+        this.setState({searchParamenter: e.target.value});
     }
 
     renderPokemonBox(pokemon) {
         return(
-            <div className="display-pokemon">
-                <div className="image-container"><img src={pokemon.sprites.front_default} /></div>
-                <Link to={`/pokemon/${pokemon.id}`}><div className="name-text">{pokemon.name}</div></Link>
-            </div>
+            <Link to={`/pokemon/${pokemon.id}`}>
+                <div className="display-pokemon">
+                    <div className="image-container"><img src={pokemon.sprites.front_default} /></div>
+                    <div className="name-text">{pokemon.name}</div>
+                </div>
+            </Link>
         );
     }
 
     renderAll(pokemon) {
         return(
             <div className="pokemon-item-display">
-                {pokemon.map((mon, index) => {
+                {pokemon.filter(mon => {
+                    if(mon.name.includes(this.state.searchParamenter.toLowerCase())){
+                        return mon;
+                    }
+                }).map((mon, index) => {
                     return (
                         <div key={`pokemon-${index}`}>
                             {this.renderPokemonBox(mon)}
@@ -82,7 +88,7 @@ export default class PokemonProfile extends React.Component {
                         className={`tab ${!this.state.showAll && 'selected'}`}
                         onClick={ () => {this.setState({showAll: false});} }
                     >
-                        Favorites 
+                        Bag 
                     </div>
                 </div>
                 <div className="text-input">
@@ -97,7 +103,9 @@ export default class PokemonProfile extends React.Component {
 
                 {this.state.showAll ? this.renderAll(pokemon) : this.renderFav(pokemon)}
 
-                <div className={this.props.isLoading ? "isLoadig" : "hide"}>Loading...</div> 
+                <div className="loading-container">
+                    <div className={this.props.isLoading ? "isLoadig" : "hide"}>Loading All...</div>
+                </div>
             </div>
         );
     }
